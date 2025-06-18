@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.projetoCinema.cinema.dto.FilmeAtualizaDTO;
 import com.projetoCinema.cinema.dto.FilmeCadastroDTO;
-import com.projetoCinema.cinema.model.Filme;
 import com.projetoCinema.cinema.service.AtualizarFilme;
 import com.projetoCinema.cinema.service.CadastroFilmeAtor;
 import com.projetoCinema.cinema.service.DeletaFilme;

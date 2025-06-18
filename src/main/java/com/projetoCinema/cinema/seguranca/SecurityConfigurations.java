@@ -1,8 +1,11 @@
-package com.projetoCinema.cinema.configuration;
+package com.projetoCinema.cinema.seguranca;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -10,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 
@@ -27,14 +31,23 @@ Permite personalizar as configurações de segurança.
 @EnableWebSecurity
 public class SecurityConfigurations {
 	
+	@Autowired
+	private SecurityFilter securityFilter;
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-	    return http.csrf(csrf -> csrf.disable())//Desativa a proteção CSRF (Cross Site Request Forgery).
-	            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//Define a política de criação de sessões como "stateless" (sem estado), Isso significa que o servidor não armazenará sessões para os usuários — cada requisição deve conter todos os dados necessários para autenticação (ex: um token JWT).
-	            .build();
+	    return http
+	        .csrf(csrf -> csrf.disable()) // Desativa CSRF
+	        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless
+	        .authorizeHttpRequests(auth -> auth
+	            .requestMatchers(HttpMethod.POST, "/login").permitAll() // Libera o login
+	            .anyRequest().authenticated() // Protege qualquer outra rota
+	        )
+	        .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) // Adiciona o filtro JWT antes da autenticação padrão
+	        .build(); // Finaliza a configuração
 	}
-	
+
+
 	
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -45,9 +58,4 @@ public class SecurityConfigurations {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
-
-
-	
-	 
 }

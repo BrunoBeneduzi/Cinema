@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.projetoCinema.cinema.repository.UsuarioRepository;
 
-@Service
+@Service//busca o usuario no banco de dados para ser possivel realizar a autenticação
 public class AutenticacaoUsuario implements UserDetailsService{
+	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
