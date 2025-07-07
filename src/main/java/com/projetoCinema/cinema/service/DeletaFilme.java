@@ -13,7 +13,7 @@ public class DeletaFilme {
 	public Filme deletaFilme(Long id) {
 		Filme filme = this.filmesRepository.findById(id).get();
 		
-		System.out.println(filme);
+		
 		this.filmesRepository.delete(filme); 
 		
 		return filme;

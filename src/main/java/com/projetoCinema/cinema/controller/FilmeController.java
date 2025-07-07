@@ -20,11 +20,13 @@ import com.projetoCinema.cinema.service.CadastroFilmeAtor;
 import com.projetoCinema.cinema.service.DeletaFilme;
 import com.projetoCinema.cinema.service.ListagemFilmesAtor;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @RestController //Usado para marcar a classe como um controlador que lida com requisições http
 @RequestMapping("/filme")
+@SecurityRequirement(name = "bearer-key")
 public class FilmeController {
 
 	@Autowired

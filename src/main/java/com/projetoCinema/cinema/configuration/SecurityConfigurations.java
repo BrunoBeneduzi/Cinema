@@ -1,4 +1,4 @@
-package com.projetoCinema.cinema.seguranca;
+package com.projetoCinema.cinema.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.projetoCinema.cinema.seguranca.SecurityFilter;
+
 
 
 /*
@@ -27,6 +29,8 @@ Habilita a segurança da web com Spring Security.
 Permite personalizar as configurações de segurança.
  */
 
+
+//essa classe e a classe securityFilter, são filtros que são chamados sempre que existe uma requisisão http, para escolher qual vai vir primeiro, precisa colocar em um metodo
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
@@ -40,15 +44,15 @@ public class SecurityConfigurations {
 	        .csrf(csrf -> csrf.disable()) // Desativa CSRF
 	        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless
 	        .authorizeHttpRequests(auth -> auth
-	            .requestMatchers(HttpMethod.POST, "/login").permitAll() // Libera o login
+	            .requestMatchers(HttpMethod.POST, "/login").permitAll()
+	            .requestMatchers(HttpMethod.POST, "/login/cadastrar").permitAll()
+	            .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()// Libera o login
 	            .anyRequest().authenticated() // Protege qualquer outra rota
 	        )
 	        .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) // Adiciona o filtro JWT antes da autenticação padrão
 	        .build(); // Finaliza a configuração
 	}
 
-
-	
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
 		return configuration.getAuthenticationManager();
@@ -56,6 +60,6 @@ public class SecurityConfigurations {
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder();//decodifica a senha 
 	}
 }

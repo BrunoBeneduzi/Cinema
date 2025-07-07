@@ -1,6 +1,8 @@
 package com.projetoCinema.cinema.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,7 +14,7 @@ import com.projetoCinema.cinema.configuration.DadosTokenJwtDTO;
 import com.projetoCinema.cinema.configuration.TokenService;
 import com.projetoCinema.cinema.dto.DadosLoginDTO;
 import com.projetoCinema.cinema.model.Usuario;
-
+import com.projetoCinema.cinema.service.CadastraNovoUsuario;
 
 import jakarta.validation.Valid;
 
@@ -27,6 +29,9 @@ public class AutenticacaoController {
 	@Autowired
 	private TokenService tokenService;
 	
+	@Autowired
+	private CadastraNovoUsuario cadastrarUsuario;
+	
 	@PostMapping
 	public ResponseEntity logar(@RequestBody @Valid DadosLoginDTO login) {
 		var AutenticacaoToken = new UsernamePasswordAuthenticationToken(login.login(), login.senha()); //cria um token de autenticação contendo login e senha do usuario
@@ -38,7 +43,19 @@ public class AutenticacaoController {
 		return ResponseEntity.ok(new DadosTokenJwtDTO(tokenJWT));
 	}
 	
+	@PostMapping("/cadastrar")
+	public ResponseEntity cadastrarUsuario(@RequestBody @Valid DadosLoginDTO login) {
+		
+		DadosLoginDTO dados = this.cadastrarUsuario.cadastraUsuario(login);
+		
+		if(dados != null) {
+			return ResponseEntity.status(HttpStatus.CREATED).body(dados);
+		}else {
+			 return ResponseEntity.status(HttpStatus.CONFLICT).body("Já existe um usuário com esse e-mail cadastrado.");
+		}
+		
+		
+	}
 	
-
-
+	
 }
