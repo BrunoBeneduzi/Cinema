@@ -1,167 +1,260 @@
-# 🎬 Projeto CINEMA
+# Projeto CINEMA 🎬
 
-Esse projeto é uma API que armazena informações sobre filmes 🎥 e atores 🎭 que participaram deles.  
-Abaixo está descrito quais informações de filmes e atores são armazenadas.  
-Utiliza Spring Security 🔐 para criar um sistema de login, assim, para poder alterar, adicionar ou pesquisar dados é preciso estar logado.  
-No **Passo a passo** será mostrado como utilizar o código.
+Este projeto é uma **API REST** desenvolvida com **Spring Boot** que armazena informações sobre **filmes e atores** que participaram deles. Também utiliza **Spring Security** para controlar o acesso às funcionalidades da API.
 
 ---
 
-## 🚀 Funcionalidades
+## 🔐 Autenticação e Acesso
 
-- ➕ Adicionar filmes e atores (só é possível adicionar atores quando for adicionar um filme).  
-- ❌ Excluir filmes.  
-- ✏️ Editar filmes e atores.
-
----
-
-## 🗂️ Modelos de Dados
-
-### 🎞️ Filmes
-- `Long id`  
-- `String nomeFilme`  
-- `Double nota` ⭐  
-- `String nomeDiretor` 🎬  
-- `LocalDate dataDeLancamento` 📅  
-- `List<Atores> atores` 👥  
-
-### 🎭 Atores
-- `Long id`  
-- `String nomeCompleto`  
-- `LocalDate dataDeNascimento` 🎂  
-- `Long quantidadeDePremios` 🏆 (É quantos prêmios o ator ganhou na vida, mas não diz quais prêmios foram esses)  
-- `String nacionalidade` 🌎  
-
-### 👤 Usuario  
-Essa classe é para registrar os usuários.  
-- `Long id`  
-- `String login` 📧  
-- `String senha` 🔑 (a senha é codificada)  
-
-Todos os usuários cadastrados podem editar, excluir, adicionar ou visualizar os dados.
+A API conta com um sistema de **login e autenticação via Spring Security**.  
+Para **adicionar, editar, excluir ou visualizar** os dados, é necessário estar **logado**.
 
 ---
 
-## 🛠️ Tecnologias utilizadas
+## ✅ Funcionalidades
 
-- Java ☕  
-- Spring Boot 🌱  
-- Spring JPA 📚  
-- Spring Security 🔒  
-- MySQL 🐬  
-- Validations ✔️  
-- Postman 📨  
-- Arquitetura em camadas 🏗️  
-- JWT: https://jwt.io/libraries?filter=java  
-  - Essa biblioteca adiciona suporte para criar, assinar, verificar e decodificar tokens JWT (JSON Web Tokens) no seu projeto Java.  
-  - Com essa biblioteca, você pode gerar tokens para autenticação, validar tokens recebidos, extrair informações (claims) do token, entre outras funcionalidades relacionadas ao JWT.
+- 🔸 Adicionar filmes e atores *(ao adicionar um filme, os atores também são cadastrados)*
+- 🔸 Editar informações de filmes e atores
+- 🔸 Excluir filmes
 
+---
+
+## 🎞️ Estrutura das Entidades
+
+### 🎬 Filme
+
+```java
+Long id;
+String nomeFilme;
+Double nota;
+String nomeDiretor;
+LocalDate dataDeLancamento;
+List<Atores> atores;
+```
+
+### 🎭 Ator
+
+```java
+Long id;
+String nomeCompleto;
+LocalDate dataDeNascimento;
+Long quantidadeDePremios; // Quantidade de prêmios que o ator ganhou (sem especificar quais)
+String nacionalidade;
+```
+
+### 👤 Usuário
+
+```java
+Long id;
+String login;
+String senha; // A senha é codificada
+```
+
+Todos os usuários cadastrados têm **permissão total** para editar, excluir, adicionar e visualizar os dados.
+
+---
+
+## 🚀 Tecnologias Utilizadas
+
+- ✅ Java
+- ✅ Spring Boot
+- ✅ Spring Data JPA
+- ✅ Spring Security
+- ✅ MySQL
+- ✅ Bean Validation
+- ✅ Postman (para testes de API)
+- ✅ Arquitetura em Camadas (Controller, Service, Repository)
+- ✅ JWT: https://jwt.io/libraries?filter (Ela adiciona suporte para criar, assinar, verificar e decodificar tokens JWT (JSON Web Tokens) no seu projeto Java.)
+
+---
+
+---
+
+## 📌 Informação Útil
+
+Este projeto já inclui a dependência da biblioteca **Java JWT** da Auth0, utilizada para:
+
+- Gerar tokens para autenticação
+- Validar tokens recebidos
+- Extrair informações (claims) dos tokens
+
+Essa funcionalidade é essencial para o controle de acesso seguro usando **JWT (JSON Web Tokens)**.
+
+Dependência já presente no `pom.xml`:
+
+```xml
 <dependency>
   <groupId>com.auth0</groupId>
   <artifactId>java-jwt</artifactId>
   <version>4.5.0</version>
 </dependency>
+```
+
+---
+---
 
 ---
 
-## 📝 Passo a passo para baixar e usar o projeto
+## 🧭 Passo a Passo para Executar o Projeto
 
-Passo 1:  
-📥 git clone https://github.com/BrunoBeneduzi/Cinema.git
+### 🔽 1. Clonar o Repositório
 
-Passo 2:  
-⚙️ Depois de baixar é preciso configurar o banco de dados, crie uma dataBase chamada "cinema",  
-caso utilize o MySQL você já pode dar play no projeto, caso utilize outro, lembre de alterar no POM.XML as dependências  
-para o banco de dados que vai ser utilizado e altere no APPLICATION.PROPERTIES as configurações para o banco que vai ser utilizado.
+```bash
+git clone https://github.com/BrunoBeneduzi/Cinema.git
+```
 
-Passo 3:  
-👤 Adicionar um usuário para você conseguir usar o protocolo HTTP para mexer no projeto.
+---
 
-POST http://localhost:8080/login/cadastrar  
-Exemplo de usuário, adicione isso no Body do seu software que faz os testes de API.
+### 🛠️ 2. Configurar o Banco de Dados
 
+- Crie um banco de dados chamado `cinema`.
+- Se estiver usando **MySQL**, basta dar *play* no projeto.
+- Se estiver usando outro banco de dados:
+  - Altere as dependências no `pom.xml`
+  - Configure corretamente o `application.properties` com as credenciais e URL do seu banco.
+
+---
+
+### 👤 3. Cadastrar um Usuário
+
+Para acessar as funcionalidades da API, é necessário criar um usuário.
+
+**Requisição:**
+
+```http
+POST http://localhost:8080/login/cadastrar
+```
+
+**Exemplo de corpo da requisição (JSON):**
+
+```json
 {
   "login": "Admin@teste.com",
   "senha": "12345"
 }
+```
 
-Passo 4:  
-🔑 Depois de cadastrar o seu usuário, basta logar com ele, copiar o token que foi gerado (dura 3 horas), e adicionar o token em "Authorization" -> Bearer Token, então vai ser possível mexer no projeto.
+---
 
-![image](https://github.com/user-attachments/assets/fb545658-0c11-4dce-9dd2-e35c767ea4a7)
+### 🔐 4. Autenticar-se (Login) e Obter Token
 
-POST: http://localhost:8080/login  
+Após criar o usuário, faça login para obter o token JWT. Ele é válido por 3 horas.
+
+**Requisição:**
+
+```http
+POST http://localhost:8080/login
+```
+
+**Corpo da requisição:**
+
+```json
 {
   "login": "Admin@teste.com",
   "senha": "12345"
 }
+```
+![image](https://github.com/user-attachments/assets/c606f93b-00a8-4de2-8377-85ca186802bc)
 
-Pronto, agora você pode usar o projeto, abaixo vão exemplos de como adicionar, remover, editar e exibir os dados que foram adicionados no projeto.
 
----
+- Copie o token JWT retornado
+- Em ferramentas como Postman, adicione o token no cabeçalho:
+  - Aba **Authorization**
+  - Tipo: **Bearer Token**
+  - Cole o token
 
-## 🔍 Requisições GET
-
-Para filmes:  
-GET /filme?nomeFilme  <- Retorna todos os filmes 🎥  
-GET /filme?nomeFilme=senhor  <- Retorna o nome do filme ou dos filmes que tiverem o nome parecido 🎞️  
-GET /filme?nomeDiretor=bruno  
-GET /filme?nota=7  <- Retorna todos os filmes com nota igual ou maior que 7 ⭐  
-GET /filme?id=1  <- Retorna o filme pelo id 🔢
-
-Para atores:  
-GET /ator?nomeCompleto  <- Retorna todos os atores 🎭  
-GET /ator?nomeFilme=senhor  <- Retorna os atores do filme que tiverem nome parecido 👥  
-GET /ator?nomeDiretor=bruno  
-GET /ator?nota=7  <- Retorna atores que participaram de filmes com nota igual ou maior que 7 🏆  
-GET /ator?id=1  <- Retorna o ator pelo id 🔢
+![image](https://github.com/user-attachments/assets/f9d2579f-b84f-4dbb-9704-eb5f20f12e3d)
 
 ---
 
-## ➕ Requisições POST
+## 📡 Exemplos de Requisições
 
-Para filmes:
+### 📥 GET – Consultar Dados
 
+#### 🔍 Filmes
+
+```http
+GET /filme?nomeFilme         → Retorna todos os filmes
+GET /filme?nomeFilme=senhor  → Busca por nome parcial
+GET /filme?nomeDiretor=bruno → Busca por diretor
+GET /filme?nota=7            → Retorna filmes com nota ≥ 7
+GET /filme?id=1              → Retorna filme por ID
+```
+
+#### 🎭 Atores
+
+```http
+GET /ator?nomeCompleto         → Retorna todos os atores
+GET /ator?nomeFilme=senhor     → Busca por filme relacionado
+GET /ator?nomeDiretor=bruno    → Busca por diretor
+GET /ator?nota=7               → Retorna filmes com nota ≥ 7
+GET /ator?id=1                 → Retorna ator por ID
+```
+
+---
+
+### ➕ POST – Cadastrar Filme e Atores
+
+**Requisição:**
+
+```http
+POST /filme
+```
+
+**Exemplo de corpo da requisição:**
+
+```json
 [
   {
-    "nomeFilme": "Nome do Filme",
-    "nota": 8.5,
-    "nomeDiretor": "Nome do Diretor",
+    "nomeFilme": "Matrix",
+    "nota": 9.5,
+    "nomeDiretor": "Wachowski",
     "dataDeLancamento": "1999-03-31",
     "atores": [
       {
-        "nomeCompleto": "Nome do Ator",
+        "nomeCompleto": "Keanu Reeves",
         "dataDeNascimento": "1964-09-02",
-        "quantidadeDePremios": 3,
-        "nacionalidade": "Brasileiro"
+        "qtdPremios": 5,
+        "nacionalidade": "Canadense"
       }
     ]
   }
 ]
+```
+
+> 🎯 Observação: A data deve estar no formato `yyyy-MM-dd`.
 
 ---
 
-## ✏️ Requisições PUT
+### ✏️ PUT – Atualizar Informações
 
-Para filmes:
+**Requisição:**
 
-PUT filme/ID
+```http
+PUT /filme/{id}
+```
 
-coloque depois o que deseja mudar no formato de JSON, exemplo:
+**Exemplo de atualização parcial (nota):**
 
+```json
 {
   "nota": 10
 }
+```
 
 ---
 
-## ❌ Requisições DELETE
+### 🗑️ DELETE – Excluir Filme
 
-Para excluir filmes:
+**Requisição:**
 
-http://localhost:8080/filme/6
+```http
+DELETE http://localhost:8080/filme/6
+```
 
 ---
 
-Use esse link para verificar melhor:  
-🌐 http://localhost:8080/swagger-ui/index.html#/
+Pronto! Agora você pode usar a API para gerenciar seus filmes e atores com segurança e controle via autenticação JWT. 🎥✅
+
+
+
